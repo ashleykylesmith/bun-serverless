@@ -1,0 +1,58 @@
+{
+  "global": {
+    "port": 8080,
+    "host": "localhost",
+    "defaultTimeout": 300000,
+    "healthCheckInterval": 30000,
+    "cleanupInterval": 60000,
+    "logLevel": "info",
+    "cors": {
+      "enabled": true,
+      "origin": "*"
+    }
+  },
+  "services": {
+    "hello-world": {
+      "name": "hello-world",
+      "command": "node ./examples/hello-service/index.js",
+      "port": 3001,
+      "timeout": 300000,
+      "healthCheck": "/health",
+      "env": {
+        "NODE_ENV": "production"
+      },
+      "instances": 1,
+      "autorestart": false,
+      "maxRestarts": 0
+    },
+    "data-processor": {
+      "name": "data-processor", 
+      "command": "node ./examples/data-service/index.js",
+      "port": 3002,
+      "timeout": 180000,
+      "healthCheck": "/status",
+      "env": {
+        "NODE_ENV": "production"
+      },
+      "instances": 1,
+      "autorestart": false,
+      "maxRestarts": 0
+    }
+  },
+  "routing": [
+    {
+      "path": "/hello",
+      "service": "hello-world",
+      "method": "ALL",
+      "stripPath": true,
+      "preserveHost": true
+    },
+    {
+      "path": "/process",
+      "service": "data-processor", 
+      "method": "POST",
+      "stripPath": false,
+      "preserveHost": true
+    }
+  ]
+}
