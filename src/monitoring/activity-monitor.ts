@@ -1,6 +1,6 @@
-import { ProcessManager } from '../process/manager.js';
-import { ConfigManager } from '../config/manager.js';
-import { Logger } from '../utils/logger.js';
+import { ProcessManager } from '../process/manager';
+import { ConfigManager } from '../config/manager';
+import { Logger } from '../utils/logger';
 
 export class ActivityMonitor {
   private processManager: ProcessManager;

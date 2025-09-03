@@ -34,6 +34,19 @@ A lightweight Bun server that functions as an API gateway and process manager, m
      -H "Content-Type: application/json" \
      -d '{"text": "Hello World", "type": "greeting"}'
    ```
+OR
+
+**Use as a package:**
+```typescript
+// Start the gateway
+import { ServerlessGateway } from 'bun-serverless';
+
+const gateway = new ServerlessGateway();
+gateway.start().catch((error) => {
+  console.error('Failed to start gateway:', error);
+  process.exit(1);
+});
+```
 
 ## Configuration
 

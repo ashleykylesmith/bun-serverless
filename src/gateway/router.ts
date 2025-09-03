@@ -1,7 +1,7 @@
-import { ProcessManager } from '../process/manager.js';
-import { ConfigManager } from '../config/manager.js';
-import { Logger } from '../utils/logger.js';
-import { RoutingRule } from '../types/index.js';
+import { ProcessManager } from '../process/manager';
+import { ConfigManager } from '../config/manager';
+import { Logger } from '../utils/logger';
+import { RoutingRule } from '../types/index';
 
 export class Router {
   private processManager: ProcessManager;

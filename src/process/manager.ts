@@ -1,7 +1,7 @@
 import pm2 from 'pm2';
 import { promisify } from 'util';
-import { ServiceInstance, ServiceConfig, ServiceStatus, HealthCheckResult } from '../types/index.js';
-import { Logger } from '../utils/logger.js';
+import { ServiceInstance, ServiceConfig, ServiceStatus, HealthCheckResult } from '../types';
+import { Logger } from '../utils/logger';
 
 export class ProcessManager {
   private services: Map<string, ServiceInstance> = new Map();
@@ -91,7 +91,7 @@ export class ProcessManager {
         log_file: `logs/${name}-combined.log`
       };
 
-      await promisify(pm2.start.bind(pm2))(pm2Config);
+      await promisify<typeof pm2Config>(pm2.start.bind(pm2))(pm2Config);
 
       service.status = 'running';
       service.startTime = new Date();

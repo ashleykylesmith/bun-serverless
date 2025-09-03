@@ -1,11 +1,16 @@
 {
   "name": "bun-serverless",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A lightweight Bun server that functions as an API gateway and process manager",
-  "main": "src/index.ts",
+  "main": "dist/index.js",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "dev": "bun run --watch src/index.ts",
     "start": "bun run src/index.ts",
+    "build:package": "tsc",
     "build": "bun build src/index.ts --outdir ./dist --target node",
     "clean": "rm -rf dist",
     "test": "bun test",
