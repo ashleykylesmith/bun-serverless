@@ -14,7 +14,7 @@
   "services": {
     "hello-world": {
       "name": "hello-world",
-      "command": "node ./examples/hello-service/index.js",
+      "command": "bun ./examples/hello-service/index.js",
       "port": 3001,
       "timeout": 300000,
       "healthCheck": "/health",
@@ -27,7 +27,7 @@
     },
     "data-processor": {
       "name": "data-processor", 
-      "command": "node ./examples/data-service/index.js",
+      "command": "bun ./examples/data-service/index.js",
       "port": 3002,
       "timeout": 180000,
       "healthCheck": "/status",

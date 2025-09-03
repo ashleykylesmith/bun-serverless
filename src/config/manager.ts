@@ -1,8 +1,8 @@
 import { readFileSync, watchFile, existsSync, mkdirSync } from 'fs';
 import { resolve, extname } from 'path';
 import YAML from 'yaml';
-import { Config, ConfigSchema } from '../types/index.js';
-import { Logger } from '../utils/logger.js';
+import { Config, ConfigSchema } from '../types/index';
+import { Logger } from '../utils/logger';
 
 export class ConfigManager {
   private config: Config;

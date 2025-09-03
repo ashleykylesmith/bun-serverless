@@ -1,5 +1,4 @@
 import { mkdirSync, existsSync } from 'fs';
-import cors from 'cors';
 import { createLogger } from './utils/logger.js';
 import { ConfigManager } from './config/manager.js';
 import { ProcessManager } from './process/manager.js';
