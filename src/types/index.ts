@@ -13,14 +13,6 @@ export const ServiceConfigSchema = z.object({
   maxRestarts: z.number().min(0).default(0)
 });
 
-export const RoutingRuleSchema = z.object({
-  path: z.string(),
-  service: z.string(),
-  method: z.enum(['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'ALL']).default('ALL'),
-  stripPath: z.boolean().default(false),
-  preserveHost: z.boolean().default(true)
-});
-
 export const GlobalConfigSchema = z.object({
   port: z.number().min(1000).max(65535).default(8080),
   host: z.string().default('localhost'),
@@ -36,13 +28,11 @@ export const GlobalConfigSchema = z.object({
 
 export const ConfigSchema = z.object({
   global: GlobalConfigSchema.default({}),
-  services: z.record(ServiceConfigSchema),
-  routing: z.array(RoutingRuleSchema).default([])
+  services: z.record(ServiceConfigSchema)
 });
 
 // Type exports
 export type ServiceConfig = z.infer<typeof ServiceConfigSchema>;
-export type RoutingRule = z.infer<typeof RoutingRuleSchema>;
 export type GlobalConfig = z.infer<typeof GlobalConfigSchema>;
 export type Config = z.infer<typeof ConfigSchema>;
 

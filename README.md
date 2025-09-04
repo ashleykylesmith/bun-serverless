@@ -4,11 +4,11 @@ A lightweight Bun server that functions as an API gateway and process manager, m
 
 ## Features
 
-- **API Gateway**: Routes requests to appropriate services based on configuration
+- **API Gateway**: Routes requests to services by service name in the URL path
 - **Process Management**: Uses PM2 to start, stop, and monitor services programmatically
 - **Auto-scaling**: Automatically starts services on-demand and stops inactive services
 - **Health Monitoring**: Built-in health checks and service monitoring
-- **Configuration Management**: Hot-reloadable JSON/YAML configuration
+- **Configuration Management**: Hot-reloadable JSON configuration
 - **Management API**: RESTful API for service management and monitoring
 - **TypeScript**: Full type safety and modern development experience
 
@@ -26,13 +26,13 @@ A lightweight Bun server that functions as an API gateway and process manager, m
 
 3. **Test the services:**
    ```bash
-   # Hello World service
-   curl http://localhost:8080/hello?name=World
-   
-   # Data processing service
-   curl -X POST http://localhost:8080/process \
-     -H "Content-Type: application/json" \
-     -d '{"text": "Hello World", "type": "greeting"}'
+  # Hello World service
+  curl http://localhost:8080/hello-world/hello?name=World
+
+  # Data processing service
+  curl -X POST http://localhost:8080/data-processor/process \
+    -H "Content-Type: application/json" \
+    -d '{"text": "Hello World", "type": "greeting"}'
    ```
 OR
 
@@ -50,7 +50,7 @@ gateway.start().catch((error) => {
 
 ## Configuration
 
-The gateway uses a `config.json` file for configuration. Here's the structure:
+The gateway uses a `config.json` file for configuration. Routes are inferred from the first path segment, which must match a service name. Here's the structure:
 
 ```json
 {
@@ -73,16 +73,7 @@ The gateway uses a `config.json` file for configuration. Here's the structure:
       "instances": 1,
       "autorestart": false
     }
-  },
-  "routing": [
-    {
-      "path": "/api/v1/service",
-      "service": "service-name",
-      "method": "ALL",
-      "stripPath": true,
-      "preserveHost": true
-    }
-  ]
+  }
 }
 ```
 
@@ -106,12 +97,10 @@ The gateway uses a `config.json` file for configuration. Here's the structure:
 - `instances`: Number of instances to run (default: 1)
 - `autorestart`: Whether to automatically restart failed services
 
-#### Routing Rules
-- `path`: URL path to match
-- `service`: Service name to route to
-- `method`: HTTP method to match (ALL, GET, POST, etc.)
-- `stripPath`: Remove the matched path prefix before forwarding
-- `preserveHost`: Keep original Host header
+#### Routing
+- Requests are routed by the first path segment as the service name.
+- Example: `/hello-world/hello` forwards to the `hello-world` service with path `/hello`.
+- Example: `/data-processor/process` forwards to `data-processor` with path `/process`.
 
 ## Management API
 
@@ -183,15 +172,7 @@ Add to `config.json`:
       "timeout": 300000,
       "healthCheck": "/health"
     }
-  },
-  "routing": [
-    {
-      "path": "/my-service",
-      "service": "my-service",
-      "method": "ALL",
-      "stripPath": true
-    }
-  ]
+  }
 }
 ```
 

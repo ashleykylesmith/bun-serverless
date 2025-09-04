@@ -38,21 +38,5 @@
       "autorestart": false,
       "maxRestarts": 0
     }
-  },
-  "routing": [
-    {
-      "path": "/hello",
-      "service": "hello-world",
-      "method": "ALL",
-      "stripPath": true,
-      "preserveHost": true
-    },
-    {
-      "path": "/process",
-      "service": "data-processor", 
-      "method": "POST",
-      "stripPath": false,
-      "preserveHost": true
-    }
-  ]
+  }
 }

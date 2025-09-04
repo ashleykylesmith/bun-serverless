@@ -1,0 +1,11 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Type check project",
+			"type": "shell",
+			"command": "bun run type-check",
+			"group": "build"
+		}
+	]
+}

@@ -1,6 +1,5 @@
-import { readFileSync, watchFile, existsSync, mkdirSync } from 'fs';
-import { resolve, extname } from 'path';
-import YAML from 'yaml';
+import { readFileSync, watchFile, existsSync } from 'fs';
+import { resolve } from 'path';
 import { Config, ConfigSchema } from '../types/index';
 import { Logger } from '../utils/logger';
 
@@ -22,25 +21,18 @@ export class ConfigManager {
       this.logger.warn(`Configuration file not found at ${this.configPath}, using defaults`);
       return ConfigSchema.parse({
         global: {},
-        services: {},
-        routing: []
+        services: {}
       });
     }
 
     try {
       const content = readFileSync(this.configPath, 'utf-8');
-      const ext = extname(this.configPath);
       
-      let parsed;
-      if (ext === '.yaml' || ext === '.yml') {
-        parsed = YAML.parse(content);
-      } else {
-        parsed = JSON.parse(content);
-      }
-
+      const parsed = JSON.parse(content);
       const config = ConfigSchema.parse(parsed);
       this.logger.info('Configuration loaded successfully', { configPath: this.configPath });
       return config;
+
     } catch (error) {
       this.logger.error('Failed to load configuration', { 
         error: error instanceof Error ? error.message : String(error),
@@ -111,9 +103,8 @@ export class ConfigManager {
         healthCheckInterval: 30000,
         cleanupInterval: 60000,
         logLevel: 'info'
-      },
-      services: {},
-      routing: []
+  },
+  services: {}
     });
   }
 }
