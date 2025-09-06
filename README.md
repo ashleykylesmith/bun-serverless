@@ -224,6 +224,24 @@ Logs are written to:
 
 ## Production Deployment
 
+### NPM Package Publishing
+
+This repository includes automated NPM publishing via GitHub Actions. The workflow triggers when:
+- Changes are pushed to the `main` branch
+- Files in the `src/` directory or `package.json` are modified
+
+The publishing process includes:
+1. TypeScript type checking
+2. Project build
+3. Version comparison (only publishes if version has changed)
+4. Automated NPM publish
+
+**Setup Requirements:**
+- Add `NPM_TOKEN` secret to your GitHub repository settings
+- Ensure the package version in `package.json` is incremented for new releases
+
+### Manual Deployment
+
 1. Build the project:
    ```bash
    bun run build
