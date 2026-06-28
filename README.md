@@ -4,11 +4,11 @@ A lightweight Bun server that functions as an API gateway and process manager, m
 
 ## Features
 
-- **API Gateway**: Routes requests to services by service name in the URL path
+- **API Gateway**: Routes requests to appropriate services based on configuration
 - **Process Management**: Uses PM2 to start, stop, and monitor services programmatically
 - **Auto-scaling**: Automatically starts services on-demand and stops inactive services
 - **Health Monitoring**: Built-in health checks and service monitoring
-- **Configuration Management**: Hot-reloadable JSON configuration
+- **Configuration Management**: Hot-reloadable JSON/YAML configuration
 - **Management API**: RESTful API for service management and monitoring
 - **TypeScript**: Full type safety and modern development experience
 
@@ -26,31 +26,18 @@ A lightweight Bun server that functions as an API gateway and process manager, m
 
 3. **Test the services:**
    ```bash
-  # Hello World service
-  curl http://localhost:8080/hello-world/hello?name=World
-
-  # Data processing service
-  curl -X POST http://localhost:8080/data-processor/process \
-    -H "Content-Type: application/json" \
-    -d '{"text": "Hello World", "type": "greeting"}'
+   # Hello World service
+   curl http://localhost:8080/hello?name=World
+   
+   # Data processing service
+   curl -X POST http://localhost:8080/process \
+     -H "Content-Type: application/json" \
+     -d '{"text": "Hello World", "type": "greeting"}'
    ```
-OR
-
-**Use as a package:**
-```typescript
-// Start the gateway
-import { ServerlessGateway } from 'bun-serverless';
-
-const gateway = new ServerlessGateway();
-gateway.start().catch((error) => {
-  console.error('Failed to start gateway:', error);
-  process.exit(1);
-});
-```
 
 ## Configuration
 
-The gateway uses a `config.json` file for configuration. Routes are inferred from the first path segment, which must match a service name. Here's the structure:
+The gateway uses a `config.json` file for configuration. Here's the structure:
 
 ```json
 {
@@ -73,7 +60,16 @@ The gateway uses a `config.json` file for configuration. Routes are inferred fro
       "instances": 1,
       "autorestart": false
     }
-  }
+  },
+  "routing": [
+    {
+      "path": "/api/v1/service",
+      "service": "service-name",
+      "method": "ALL",
+      "stripPath": true,
+      "preserveHost": true
+    }
+  ]
 }
 ```
 
@@ -97,10 +93,12 @@ The gateway uses a `config.json` file for configuration. Routes are inferred fro
 - `instances`: Number of instances to run (default: 1)
 - `autorestart`: Whether to automatically restart failed services
 
-#### Routing
-- Requests are routed by the first path segment as the service name.
-- Example: `/hello-world/hello` forwards to the `hello-world` service with path `/hello`.
-- Example: `/data-processor/process` forwards to `data-processor` with path `/process`.
+#### Routing Rules
+- `path`: URL path to match
+- `service`: Service name to route to
+- `method`: HTTP method to match (ALL, GET, POST, etc.)
+- `stripPath`: Remove the matched path prefix before forwarding
+- `preserveHost`: Keep original Host header
 
 ## Management API
 
@@ -172,7 +170,15 @@ Add to `config.json`:
       "timeout": 300000,
       "healthCheck": "/health"
     }
-  }
+  },
+  "routing": [
+    {
+      "path": "/my-service",
+      "service": "my-service",
+      "method": "ALL",
+      "stripPath": true
+    }
+  ]
 }
 ```
 
@@ -223,24 +229,6 @@ Logs are written to:
 - `LOG_LEVEL` - Override log level (error, warn, info, debug)
 
 ## Production Deployment
-
-### NPM Package Publishing
-
-This repository includes automated NPM publishing via GitHub Actions. The workflow triggers when:
-- Changes are pushed to the `main` branch
-- Files in the `src/` directory or `package.json` are modified
-
-The publishing process includes:
-1. TypeScript type checking
-2. Project build
-3. Version comparison (only publishes if version has changed)
-4. Automated NPM publish
-
-**Setup Requirements:**
-- Add `NPM_TOKEN` secret to your GitHub repository settings
-- Ensure the package version in `package.json` is incremented for new releases
-
-### Manual Deployment
 
 1. Build the project:
    ```bash

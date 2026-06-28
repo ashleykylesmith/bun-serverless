@@ -14,7 +14,7 @@
   "services": {
     "hello-world": {
       "name": "hello-world",
-      "command": "bun ./examples/hello-service/index.js",
+      "command": "node ./examples/hello-service/index.js",
       "port": 3001,
       "timeout": 300000,
       "healthCheck": "/health",
@@ -27,7 +27,7 @@
     },
     "data-processor": {
       "name": "data-processor", 
-      "command": "bun ./examples/data-service/index.js",
+      "command": "node ./examples/data-service/index.js",
       "port": 3002,
       "timeout": 180000,
       "healthCheck": "/status",
@@ -38,5 +38,21 @@
       "autorestart": false,
       "maxRestarts": 0
     }
-  }
+  },
+  "routing": [
+    {
+      "path": "/hello",
+      "service": "hello-world",
+      "method": "ALL",
+      "stripPath": true,
+      "preserveHost": true
+    },
+    {
+      "path": "/process",
+      "service": "data-processor", 
+      "method": "POST",
+      "stripPath": false,
+      "preserveHost": true
+    }
+  ]
 }
